@@ -13,6 +13,23 @@ export default function EditorPage() {
 
     const note = notes.find((n) => n.id === parseInt(id));
 
+    // Keyboard shortcut: Ctrl+S to save feedback
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                // Visual save feedback
+                const el = document.getElementById('save-indicator');
+                if (el) {
+                    el.textContent = '✓ Saved!';
+                    setTimeout(() => { el.textContent = 'Saved'; }, 1500);
+                }
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     useEffect(() => {
         if (note) {
             setActiveNoteId(note.id);
@@ -128,7 +145,9 @@ export default function EditorPage() {
                     <div className="mt-8 pt-8 border-t border-slate-200/50 flex flex-col sm:flex-row gap-4 sm:gap-8 items-start sm:items-center text-sm text-slate-500">
                         <div className="flex items-center space-x-6">
                             <span>{note.content.length} characters</span>
+                            <span>{note.content.trim().split(/\s+/).filter(Boolean).length} words</span>
                             <span>{note.content.split('\n').length} lines</span>
+                            <span>~{Math.ceil(note.content.trim().split(/\s+/).filter(Boolean).length / 200)} min read</span>
                         </div>
                         <div className="flex items-center space-x-2 text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
                             <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse" />

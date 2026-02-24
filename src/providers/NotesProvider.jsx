@@ -22,12 +22,13 @@ export function NotesProvider({ children }) {
         const newNote = {
             id: Date.now(),
             text: text || "New Note",
-            title: text ? text.split('\n')[0].substring(0, 20) : "New Note", // Simple title extraction
+            title: text ? text.split('\n')[0].substring(0, 20) : "New Note",
             date: new Date().toLocaleDateString(),
-            content: text || ""
+            content: text || "",
+            pinned: false
         };
         setNotes([newNote, ...notes]);
-        setActiveNoteId(newNote.id); // Auto-select new note
+        setActiveNoteId(newNote.id);
         return newNote;
     };
 
@@ -38,11 +39,25 @@ export function NotesProvider({ children }) {
         }
     };
 
+    const togglePin = (id) => {
+        setNotes(prev =>
+            prev.map(n => n.id === id ? { ...n, pinned: !n.pinned } : n)
+        );
+    };
+
+    // Sort: pinned first, then by id (newest)
+    const sortedNotes = [...notes].sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+        return b.id - a.id;
+    });
+
     const value = {
-        notes,
+        notes: sortedNotes,
         setNotes,
         addNote,
         deleteNote,
+        togglePin,
         activeNoteId,
         setActiveNoteId
     };
