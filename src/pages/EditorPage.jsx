@@ -66,7 +66,7 @@ export default function EditorPage() {
                         <span className="text-2xl font-mono">📝</span>
                     </div>
                     <h1 className="text-2xl font-bold text-slate-900 mb-2">Loading your note</h1>
-                    <p className="text-slate-500">Just a moment...</p>
+                    <p className="text-slate-500">Just a moment....</p>
                 </div>
             </div>
         );
